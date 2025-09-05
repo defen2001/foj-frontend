@@ -1,11 +1,17 @@
 <template>
-  <div id="home">
+  <div id="questionManageView">
+    <a-flex justify="space-between">
+      <h2>题目管理</h2>
+      <a-space>
+        <a-button type="primary" href="/add_question">+ 创建题目</a-button>
+      </a-space>
+    </a-flex>
     <!--  搜索框-->
     <a-form layout="inline" :model="searchParams" @finish="doSearch">
-      <a-form-item label="题号" name="id">
+      <a-form-item label="id" name="id">
         <a-input
           v-model:value="searchParams.id"
-          placeholder="请输入题号"
+          placeholder="请输入 id"
           allow-clear
           type="number"
         />
@@ -41,21 +47,21 @@
         <!-- 标签 -->
         <template v-if="column.dataIndex === 'tags'">
           <a-space wrap>
-            <a-tag v-for="tag in record.tags || '[]'" color="green" :key="tag">{{
-                tag
-              }}</a-tag>
+            <a-tag v-for="tag in JSON.parse(record.tags || '[]')" color="green" :key="tag">{{
+              tag
+            }}</a-tag>
           </a-space>
-        </template>
-        <template v-else-if="column.dataIndex === 'acceptedRate'">
-          {{ record.submitNum === 0 ? '0.0%' : ((record.acceptedNum / record.submitNum) * 100).toFixed(1) + '%' }}
-          ({{ record.acceptedNum }}/{{ record.submitNum }})
         </template>
         <template v-else-if="column.dataIndex === 'createTime'">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
+        <template v-else-if="column.dataIndex === 'editTime'">
+          {{ dayjs(record.editTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
         <template v-else-if="column.key === 'action'">
           <a-space wrap>
-            <a-button type="link" :href="`/question/${record.id}`">做题 </a-button>
+            <a-button type="link" :href="`/add_question?id=${record.id}`">编辑 </a-button>
+            <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
           </a-space>
         </template>
       </template>
@@ -64,22 +70,25 @@
 </template>
 
 <script setup lang="ts">
-
-// 数据
-import {computed, onMounted, reactive, ref} from "vue";
-import {listQuestionVoByPageUsingPost} from "@/api/questionController";
-import {message} from "ant-design-vue";
-import dayjs from "dayjs";
+import { computed, onMounted, reactive, ref } from 'vue'
+import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
+import { deleteQuestionUsingPost, listQuestionByPageUsingPost } from '@/api/questionController'
 
 const columns = [
   {
-    title: '题号',
+    title: 'id',
     dataIndex: 'id',
     width: 80,
   },
   {
     title: '标题',
     dataIndex: 'title',
+  },
+  {
+    title: '内容',
+    dataIndex: 'content',
+    ellipsis: true,
   },
   {
     title: '类型',
@@ -90,12 +99,30 @@ const columns = [
     dataIndex: 'tags',
   },
   {
-    title: '通过率',
-    dataIndex: 'acceptedRate',
+    title: '答案',
+    dataIndex: 'answer',
+    ellipsis: true,
+  },
+  {
+    title: '提交数',
+    dataIndex: 'submitNum',
+  },
+  {
+    title: '通过数',
+    dataIndex: 'acceptedNum',
+  },
+  {
+    title: '用户ID',
+    dataIndex: 'userId',
+    width: 80,
   },
   {
     title: '创建时间',
     dataIndex: 'createTime',
+  },
+  {
+    title: '编辑时间',
+    dataIndex: 'editTime',
   },
   {
     title: '操作',
@@ -103,6 +130,7 @@ const columns = [
   },
 ]
 
+// 数据
 const dataList = ref([])
 const total = ref(0)
 
@@ -127,7 +155,7 @@ const pagination = computed(() => {
 
 // 获取数据
 const fetchData = async () => {
-  const res = await listQuestionVoByPageUsingPost({
+  const res = await listQuestionByPageUsingPost({
     ...searchParams,
   })
   if (res.data.data) {
@@ -157,8 +185,27 @@ const doTableChange = (page: any) => {
   fetchData()
 }
 
+// 删除数据
+const doDelete = async (id: string) => {
+  if (!id) {
+    return
+  }
+  const res = await deleteQuestionUsingPost({ id })
+  if (res.data.code === 0) {
+    message.success('删除成功')
+    // 刷新数据
+    fetchData()
+  } else {
+    message.error('删除失败')
+  }
+}
+
 // 页面加载时请求一次
 onMounted(() => {
   fetchData()
 })
 </script>
+<style scoped>
+#questionManageView {
+}
+</style>

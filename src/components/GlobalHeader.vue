@@ -79,14 +79,21 @@ const originMenuItems = [
     show: true, // 所有用户可见
   },
   {
-    key: '/add_picture',
-    label: '创建图片',
-    title: '创建图片',
+    key: '/add_question',
+    label: '创建题目',
+    title: '创建t题目',
+    requiredRole: 'admin'
   },
   {
     key: '/admin/userManage',
     label: '用户管理',
     title: '用户管理',
+    requiredRole: 'admin', // 需要管理员权限
+  },
+  {
+    key: '/admin/questionManage',
+    label: '题目管理',
+    title: '题目管理',
     requiredRole: 'admin', // 需要管理员权限
   },
 ]

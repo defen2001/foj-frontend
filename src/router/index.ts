@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import UserManageView from "@/views/admin/UserManageView.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import AddQuestionView from "@/views/AddQuestionView.vue";
+import QuestionManageView from "@/views/admin/QuestionManageView.vue";
+import QuestionDetailView from "@/views/QuestionDetailView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,9 +26,25 @@ const router = createRouter({
       component: UserRegisterView,
     },
     {
+      path: '/add_question',
+      name: '创建题目',
+      component: AddQuestionView,
+    },
+    {
+      path: '/question/:id',
+      name: '题目详情',
+      component: QuestionDetailView,
+      props: true,
+    },
+    {
       path: '/admin/userManage',
       name: '用户管理',
       component: UserManageView,
+    },
+    {
+      path: '/admin/questionManage',
+      name: '题目管理',
+      component: QuestionManageView,
     },
   ],
 })
