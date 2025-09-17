@@ -38,8 +38,7 @@
           <div style="margin-bottom: 16px">
             <a-select v-model:value="form.language" style="width: 200px" placeholder="选择编程语言">
               <a-select-option value="java">Java</a-select-option>
-              <a-select-option value="cpp">C++</a-select-option>
-              <a-select-option value="go">go</a-select-option>
+              <a-select-option disabled="true" value="go">暂不支持其他语言</a-select-option>
             </a-select>
           </div>
           <!-- 代码编辑器 -->
@@ -76,7 +75,9 @@ import { getQuestionVoByIdUsingGet } from '@/api/questionController'
 import { doQuestionSubmitUsingPost } from '@/api/questionSubmitController'
 import MarkDownViewer from '@/components/MarkDownViewer.vue'
 import CodeEditor from '@/components/CodeEditor.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const form = ref<API.QuestionSubmitAddRequest>({
   language: 'java',
   code: '',
@@ -102,6 +103,7 @@ const handleSubmit = async () => {
   })
   if (res.data.code === 0 && res.data.data) {
     message.success('提交成功')
+    router.push('/question_submit')
   } else {
     message.error('提交失败。' + res.data.message)
   }
