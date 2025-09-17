@@ -79,9 +79,14 @@ const originMenuItems = [
     show: true, // 所有用户可见
   },
   {
+    key: '/question_submit',
+    label: '题目提交详情',
+    title: '题目提交详情',
+  },
+  {
     key: '/add_question',
     label: '创建题目',
-    title: '创建t题目',
+    title: '创建题目',
     requiredRole: 'admin'
   },
   {

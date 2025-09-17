@@ -6,6 +6,7 @@ import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import AddQuestionView from "@/views/AddQuestionView.vue";
 import QuestionManageView from "@/views/admin/QuestionManageView.vue";
 import QuestionDetailView from "@/views/QuestionDetailView.vue";
+import QuestionSubmitView from "@/views/QuestionSubmitView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
       name: '题目详情',
       component: QuestionDetailView,
       props: true,
+    },
+    {
+      path: '/question_submit',
+      name: '浏览题目提交',
+      component: QuestionSubmitView,
     },
     {
       path: '/admin/userManage',
