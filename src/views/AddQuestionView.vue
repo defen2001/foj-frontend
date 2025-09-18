@@ -62,16 +62,6 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="8">
-          <a-form-item label="栈限制(MB)" name="stackLimit">
-            <a-input-number
-              v-model:value="form.judgeConfig.stackLimit"
-              :min="1"
-              style="width: 100%"
-              placeholder="如：64"
-            />
-          </a-form-item>
-        </a-col>
       </a-row>
 
       <!-- 测试用例 -->
@@ -130,7 +120,6 @@ const form = ref<API.QuestionAddRequest>({
   judgeConfig: {
     timeLimit: 1000,
     memoryLimit: 256,
-    stackLimit: 64,
   },
   judgeCase: [
     {
@@ -160,7 +149,6 @@ const handleSubmit = async (values: any) => {
         judgeConfig: {
           timeLimit: form.value.judgeConfig?.timeLimit ?? 1000,
           memoryLimit: form.value.judgeConfig?.memoryLimit ?? 256,
-          stackLimit: form.value.judgeConfig?.stackLimit ?? 64,
         },
       })
     } else {
@@ -169,15 +157,15 @@ const handleSubmit = async (values: any) => {
         judgeConfig: {
           timeLimit: form.value.judgeConfig?.timeLimit ?? 1000,
           memoryLimit: form.value.judgeConfig?.memoryLimit ?? 256,
-          stackLimit: form.value.judgeConfig?.stackLimit ?? 64,
         },
       })
     }
     if (res.data.code === 0 && res.data.data) {
       message.success('提交成功')
+      const questionId = res.data.data
       // 跳转到题目详情页
       router.push({
-        path: `/question/${id}`,
+        path: `/question/${questionId}`,
       })
     } else {
       message.error('提交失败，' + res.data.message)

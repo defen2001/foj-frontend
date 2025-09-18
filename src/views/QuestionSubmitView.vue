@@ -32,7 +32,9 @@
         <!-- 标签 -->
         <template v-if="column.dataIndex === 'judgeInfo'">
           <a-space wrap>
-            <a-tag color="blue">结果: {{ record.judgeInfo.message || '-' }}</a-tag>
+            <a-tooltip placement="topLeft" :title="record.judgeInfo.message">
+              <span>{{ record.judgeInfo.message?.length > 50 ? record.judgeInfo.message?.slice(0, 50) + '...' : record.judgeInfo.message }}</span>
+            </a-tooltip>
             <a-tag color="green"
               >耗时: {{ record.judgeInfo.time ? record.judgeInfo.time + ' ms' : '-' }}</a-tag
             >
@@ -52,6 +54,9 @@
         <template v-else-if="column.dataIndex === 'status'">
           {{ JUDGE_STATUS_MAP[record.status] }}
         </template>
+        <template v-else-if="column.dataIndex === 'username'">
+          {{ record.userVo.username }}
+        </template>
         <template v-else-if="column.dataIndex === 'createTime'">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
@@ -61,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import {computed, onMounted, onUnmounted, reactive, ref} from 'vue'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { listQuestionSubmitByPageUsingPost } from '@/api/questionSubmitController'
@@ -91,8 +96,8 @@ const columns = [
     width: 80,
   },
   {
-    title: '提交者ID',
-    dataIndex: 'userId',
+    title: '提交者',
+    dataIndex: 'username',
     width: 80,
   },
   {
@@ -156,9 +161,22 @@ const doTableChange = (page: any) => {
   fetchData()
 }
 
+let timer: any = null
+
 // 页面加载时请求一次
 onMounted(() => {
   fetchData()
+  timer = setInterval(() => {
+    fetchData()
+  }, 5000)
+})
+
+// 页面卸载时清理定时器
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+    timer = null
+  }
 })
 </script>
 <style scoped>
