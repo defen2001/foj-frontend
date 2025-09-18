@@ -102,14 +102,19 @@ declare namespace API {
 
   type JudgeConfig = {
     memoryLimit?: number
-    stackLimit?: number
     timeLimit?: number
   }
 
   type JudgeInfo = {
+    expectedOutput?: string
+    input?: string
     memory?: number
     message?: string
+    output?: string
+    pass?: number
+    status?: number
     time?: number
+    total?: number
   }
 
   type LoginUserVo = {
