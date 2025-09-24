@@ -74,12 +74,12 @@
         <a-row :gutter="16">
           <a-col :span="12">
             <a-form-item :label="`输入样例-${index + 1}`" :name="['judgeCase', index, 'input']">
-              <a-input v-model:value="caseItem.input" rows="3" placeholder="输入用例" />
+              <a-textarea v-model:value="caseItem.input" rows="3" placeholder="输入用例" allow-clear />
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item :label="`输出样例-${index + 1}`" :name="['judgeCase', index, 'output']">
-              <a-input v-model:value="caseItem.output" rows="3" placeholder="输出用例" />
+              <a-textarea v-model:value="caseItem.output" rows="3" placeholder="输出用例" allow-clear />
             </a-form-item>
           </a-col>
         </a-row>
